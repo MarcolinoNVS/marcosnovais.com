@@ -6,7 +6,7 @@ body {
 }
 
 a {
-  color: #00bfff; /* Azul para links */
+  color: #00bfff; 
   text-decoration: none;
 }
 
@@ -20,9 +20,9 @@ body {
     #000000,
     #333333
   ); /* Gradiente do preto ao cinza escuro */
-  color: white; /* Texto branco */
+  color: white; 
   font-family: Arial, sans-serif; /* Definir uma fonte padrão */
   margin: 0;
   padding: 0;
-  height: 100vh; /* Definir altura da página para 100% da tela */
+  height: 100vh; 
 }
