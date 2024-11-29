@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const pool = require("./db"); // Importa sua conexão ao banco
+const pool = require("./db"); 
 
 (async () => {
   try {
