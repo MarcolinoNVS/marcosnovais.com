@@ -9,46 +9,31 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('role');
+
+      if (!token) {
+        console.log("Token não encontrado");
+        navigate("/login");
+        return;
+      }
+
+      // Verifica se o papel é admin
+      if (role !== "admin") {
+        console.log("Acesso negado, usuário não tem permissão");
+        navigate("/cliente"); // Redireciona para página do cliente
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          console.log("Token não encontrado");
-          navigate("/login");
-          return;
-        }
-
-        console.log("Token enviado:", token);
-
-        // Verifica o papel do usuário
-        const role = localStorage.getItem("role");
-
-        // Faz a requisição para a URL correta dependendo do papel
-        const apiUrl =
-          role === "admin"
-            ? "https://marcosnovais.com//admin"
-            : "https://marcosnovais.com//cliente";
-
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await axios.get("http://localhost:5000/admin", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        console.log("Resposta da API:", response.data);
-
         setUserData(response.data);
       } catch (err) {
-        console.log("Erro ao fazer a requisição:", err);
-
+        console.log("Erro ao acessar o painel do admin:", err);
         setError("Você não tem permissão para acessar esta página.");
-
-        // Verificando se o erro é relacionado ao token
-        if (err.response?.status === 401 || err.response?.status === 403) {
-          console.log("Token inválido ou expirado");
-          // Redireciona para a página de login
-          navigate("/login");
-        }
+        navigate("/login");
       }
     };
 
@@ -66,12 +51,10 @@ const Dashboard = () => {
   return (
     <div className="poppins-thin">
       <h2>Bem-vindo ao Dashboard</h2>
-      <p>
-        {userData.role === "admin" ? "Painel de Admin" : "Painel de Cliente"}
-      </p>
-      <p>Dados do usuário: {JSON.stringify(userData)}</p>
+
     </div>
   );
 };
+
 
 export default Dashboard;

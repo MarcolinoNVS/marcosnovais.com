@@ -12,7 +12,6 @@ import "./index.css";
 import backgroundImage from "./assets/fundoback.jpg";
 import backgroundImageMobile from "./assets/fundoback.jpg";
 import Cliente from "./pages/Cliente";
-import PrivateRoute from "./components/PrivateRoute";
 import Registrar from "./pages/registrar";
 
 const App = () => {

@@ -32,4 +32,7 @@ const verifyAdmin = (req, res, next) => {
   next();
 };
 
+app.options('*', cors());  // Responde a todas as requisições OPTIONS
+
+
 module.exports = { verifyToken, verifyAdmin };

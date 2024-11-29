@@ -1,11 +1,15 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 
+// Configuração do pool de conexões
 const pool = mysql.createPool({
-  host: "localhost", // Geralmente "localhost" ou o host do seu banco de dados
-  user: "u817542199_mysql", // Nome de usuário MySQL
-  password: "120401233Lol", // Senha MySQL
-  database: "u817542199_bd_novais", // Nome do banco de dados
-  port: 3306, // Porta padrão do MySQL é 3306
+  host: "localhost",
+  user: "root",
+  password: "1204", 
+  database: "bd_novais",
+  port: 3306, 
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-module.exports = pool.promise();
+module.exports = pool;

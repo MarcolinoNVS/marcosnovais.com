@@ -6,38 +6,46 @@ const Login = () => {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Tentando fazer login com:", { usuario, senha });
+    if (isSubmitting) return;
 
+    if (!usuario.trim()) {
+      setError("O campo usuário é obrigatório.");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      const response = await axios.post("https://marcosnovais.com/login", {
+      const response = await axios.post("http://localhost:5000/login", {
         usuario,
         senha,
       });
 
-      console.log("Resposta da API:", response.data);
-
-      // Armazena o token e a role no localStorage
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
 
-      // Redireciona para o painel correto baseado no papel
       if (response.data.role === "admin") {
         navigate("/dashboard");
       } else if (response.data.role === "cliente") {
         navigate("/cliente");
       }
     } catch (err) {
-      console.error("Erro na requisição:", err);
-      setError("Erro ao conectar com o servidor.");
+      if (err.response && err.response.status === 401) {
+        setError("Usuário ou senha incorretos.");
+      } else {
+        setError("Erro ao conectar com o servidor.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleRegisterRedirect = () => {
-    navigate("/registrar"); // Redireciona para a página de registro
+    navigate("/registrar");
   };
 
   return (
@@ -50,6 +58,7 @@ const Login = () => {
             type="text"
             value={usuario}
             onChange={(e) => setUsuario(e.target.value)}
+            placeholder="Digite seu nome de usuário"
             required
           />
         </div>
@@ -59,16 +68,19 @@ const Login = () => {
             type="password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
+            placeholder="Digite sua senha"
             required
           />
         </div>
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Entrando..." : "Entrar"}
+        </button>
         <button type="button" onClick={handleRegisterRedirect}>
           Cadastrar
         </button>
       </form>
 
-      {error && <p style={{ color: "white" }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import axios from "axios";
 const Registrar = () => {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
-  const [papel, setPapel] = useState("cliente");
+  const [role, setRole] = useState("cliente");
   const [mensagem, setMensagem] = useState("");
   const [mensagemErro, setMensagemErro] = useState("");
 
@@ -18,22 +18,29 @@ const Registrar = () => {
     }
 
     try {
-      await axios.post("https://marcosnovais.com/registrar", {
+      const response = await axios.post("http://localhost:5000/registrar", {
         usuario,
         senha,
-        papel,
+        role,
       });
-      setMensagem("Usuário registrado com sucesso!");
-      setMensagemErro(""); // Limpa a mensagem de erro
-      setUsuario("");
-      setSenha("");
-      setPapel("cliente");
+    
+      if (response.status === 201) {
+        setMensagem("Usuário registrado com sucesso!");
+        setMensagemErro("");
+        setUsuario("");
+        setSenha("");
+        setRole("cliente");
+    
+        setTimeout(() => setMensagem(""), 3000);
+      } else {
+        throw new Error("Erro inesperado: " + response.status);
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Erro na requisição:", err);
       setMensagemErro(
         "Erro ao registrar usuário. Verifique os dados e tente novamente."
       );
-      setMensagem(""); // Limpa a mensagem de sucesso
+      setMensagem("");
     }
   };
 
@@ -60,10 +67,10 @@ const Registrar = () => {
           />
         </div>
         <div>
-          <label>Papel: </label>
-          <select value={papel} onChange={(e) => setPapel(e.target.value)}>
+          <label>Role: </label>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="cliente">Cliente</option>
-            <option value="admin">Admin</option>
+            <option value="admin">admin</option>
           </select>
         </div>
         <button type="submit">Cadastrar</button>
