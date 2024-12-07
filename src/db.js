@@ -3,9 +3,9 @@ const mysql = require("mysql2/promise");
 // Configuração do pool de conexões
 const pool = mysql.createPool({
   host: "localhost",
-  user: "root",
+  user: "****",
   password: "****", 
-  database: "bd_novais",
+  database: "****",
   port: 3306, 
   waitForConnections: true,
   connectionLimit: 10,
